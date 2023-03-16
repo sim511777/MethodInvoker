@@ -23,8 +23,12 @@ namespace MethodInvoker {
             return -a;
         }
 
-        public static string PrintColor([Description("aaa")] Color color) {
-            return color.ToString();
+        public static Color SetColor([Description("aaa")] Color color) {
+            return color;
+        }
+
+        public static string SetString(string str) {
+            return str;
         }
     }
 }

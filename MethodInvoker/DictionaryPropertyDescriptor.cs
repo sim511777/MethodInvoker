@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Reflection;
 
 namespace MethodInvoker {
-    class DictionaryPropertyDescriptor : PropertyDescriptor {
+    public class DictionaryPropertyDescriptor : PropertyDescriptor {
         ParameterInfo pInfo;
         Dictionary<ParameterInfo, object> dict;
 

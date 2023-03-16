@@ -24,55 +24,30 @@ namespace MethodInvoker {
             var type = typeof(Functions);
             var mInfos = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static);
             cbxFunction.Items.AddRange(mInfos);
+            if (cbxFunction.Items.Count > 0 ) {
+                cbxFunction.SelectedIndex = 0;
+            }
         }
 
         private void cbxFunction_SelectedIndexChanged(object sender, EventArgs e) {
-            // 콤보박스가 선택되면
-            // 1. 선택된 함수를 태그에 달아줌
-            // 2. 파라미터들을 딕셔너리로 만들고 그것을 딕셔너리 아답터로 만들어서 프로퍼티 그리드에 선택해 줌
+            // 선택된 함수에 대한 오브젝트를 만들어서 프로퍼티그리드에 지정
             var mInfo = cbxFunction.SelectedItem as MethodInfo;
-            grdParameter.Tag = mInfo;
-            grdParameter.SelectedObject = GetDictTypeDescriptor(mInfo);
-        }
-
-        private DictionaryTypeDescirptor GetDictTypeDescriptor(MethodInfo mInfo) {
-            if (mInfo == null)
-                return null;
-            var pInfos = mInfo.GetParameters();
-            var dict = pInfos.ToDictionary(pInfo => pInfo, pInfo => {
-                if (pInfo.HasDefaultValue) {
-                    return pInfo.DefaultValue;
-                } else {
-                    var parameterType = pInfo.ParameterType;
-                    if (parameterType.IsValueType) {
-                        return Activator.CreateInstance(parameterType);
-                    } else {
-                        return null;
-                    }
-                }
-            });
-            return new DictionaryTypeDescirptor(dict);
+            var methodParamsObject = DictionaryTypeDescirptor.FromMethodInfo(mInfo);
+            grdParameter.SelectedObject = methodParamsObject;
         }
 
         private void btnRun_Click(object sender, EventArgs e) {
-            // 런 버튼을 누르면
-            // 1. 태그로 부터 함수정보와
-            // 2. 프로퍼티 그리드로 부터 파라미터들을 구하고
-            // 3. 호출
-            var mInfo = grdParameter.Tag as MethodInfo;
-            if (mInfo == null)
+            // 프로퍼티 그리드에 지정된 오브젝트로 함수정보를 얻어와서 함수와 파라미터로 호출
+            var methodParamsObject = grdParameter.SelectedObject as DictionaryTypeDescirptor;
+            if (methodParamsObject == null)
                 return;
-            var prms = GetParameters(grdParameter.SelectedObject as DictionaryTypeDescirptor);
+            var mInfo = methodParamsObject.GetMethodInfo();
+            var prms = methodParamsObject.GetMethodParameters();
             object r = mInfo.Invoke(null, prms);
-            lbxLog.Items.Add($"Method : {mInfo}");
-            lbxLog.Items.Add($"Parameters : {string.Join(", ", prms)}");
-            lbxLog.Items.Add($"Return : {r}");
-            lbxLog.Items.Add($"=====================================");
-        }
-
-        private static object[] GetParameters(DictionaryTypeDescirptor typeDescriptor) {
-            var dict = typeDescriptor.GetPropertyOwner(null) as Dictionary<ParameterInfo, object>;
-            return dict.Values.Cast<object>().ToArray();
+            tbxLog.AppendText($"Method : {mInfo}\r\n");
+            tbxLog.AppendText($"Parameters : {string.Join(", ", prms)}\r\n");
+            tbxLog.AppendText($"Return : {r}\r\n");
+            tbxLog.AppendText($"=====================================\r\n");
         }
     }
 }

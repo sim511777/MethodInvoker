@@ -4,10 +4,35 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace MethodInvoker {
-    class DictionaryTypeDescirptor : ICustomTypeDescriptor {
+    public class DictionaryTypeDescirptor : ICustomTypeDescriptor {
+        MethodInfo mInfo;
         Dictionary<ParameterInfo, object> dict;
+
+        public static DictionaryTypeDescirptor FromMethodInfo(MethodInfo mInfo) {
+            if (mInfo == null)
+                return null;
+            var pInfos = mInfo.GetParameters();
+            var pValues = pInfos.Select(pInfo => {
+                if (pInfo.HasDefaultValue) {
+                    return pInfo.DefaultValue;
+                } else {
+                    var parameterType = pInfo.ParameterType;
+                    if (parameterType.IsValueType) {
+                        return Activator.CreateInstance(parameterType);
+                    } else {
+                        return null;
+                    }
+                }
+            });
+            var dict = pInfos.Zip(pValues, (k, v) => (k, v)).ToDictionary(item => item.k, item => item.v);
+            return new DictionaryTypeDescirptor(dict) { mInfo = mInfo };
+        }
+
+        public MethodInfo GetMethodInfo() => mInfo;
+        public object[] GetMethodParameters() => dict.Values.ToArray();
 
         public DictionaryTypeDescirptor(Dictionary<ParameterInfo, object> dict) => this.dict = dict;
         public string GetComponentName() => TypeDescriptor.GetComponentName(this, true);

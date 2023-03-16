@@ -26,14 +26,14 @@
             this.grdParameter = new System.Windows.Forms.PropertyGrid();
             this.cbxFunction = new System.Windows.Forms.ComboBox();
             this.btnRun = new System.Windows.Forms.Button();
-            this.lbxLog = new System.Windows.Forms.ListBox();
+            this.tbxLog = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // grdParameter
             // 
             this.grdParameter.Location = new System.Drawing.Point(12, 38);
             this.grdParameter.Name = "grdParameter";
-            this.grdParameter.Size = new System.Drawing.Size(311, 232);
+            this.grdParameter.Size = new System.Drawing.Size(311, 513);
             this.grdParameter.TabIndex = 0;
             // 
             // cbxFunction
@@ -48,7 +48,7 @@
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(12, 276);
+            this.btnRun.Location = new System.Drawing.Point(12, 557);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
             this.btnRun.TabIndex = 2;
@@ -56,27 +56,31 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
-            // lbxLog
+            // tbxLog
             // 
-            this.lbxLog.FormattingEnabled = true;
-            this.lbxLog.ItemHeight = 12;
-            this.lbxLog.Location = new System.Drawing.Point(329, 12);
-            this.lbxLog.Name = "lbxLog";
-            this.lbxLog.Size = new System.Drawing.Size(372, 256);
-            this.lbxLog.TabIndex = 3;
+            this.tbxLog.BackColor = System.Drawing.SystemColors.Window;
+            this.tbxLog.Location = new System.Drawing.Point(329, 12);
+            this.tbxLog.Multiline = true;
+            this.tbxLog.Name = "tbxLog";
+            this.tbxLog.ReadOnly = true;
+            this.tbxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbxLog.Size = new System.Drawing.Size(460, 539);
+            this.tbxLog.TabIndex = 3;
+            this.tbxLog.WordWrap = false;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 318);
-            this.Controls.Add(this.lbxLog);
+            this.ClientSize = new System.Drawing.Size(801, 592);
+            this.Controls.Add(this.tbxLog);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.cbxFunction);
             this.Controls.Add(this.grdParameter);
             this.Name = "FormMain";
             this.Text = "Method Invoker";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
       }
 
@@ -85,7 +89,7 @@
       private System.Windows.Forms.PropertyGrid grdParameter;
       private System.Windows.Forms.ComboBox cbxFunction;
       private System.Windows.Forms.Button btnRun;
-      private System.Windows.Forms.ListBox lbxLog;
-   }
+        private System.Windows.Forms.TextBox tbxLog;
+    }
 }
 
